@@ -25,7 +25,7 @@ public class TestController {
         ResultEntity resultEntity;
         if (name == null) throw new BusinessException(ExceptionEnum.NPE);
         if (name.equals("test")) {
-            resultEntity = new ResultEntity(ExceptionEnum.ILLEGALPARAM);
+            resultEntity = new ResultEntity(ExceptionEnum.ILLEGAL_PARAM);
         } else {
             testService.checkName(name);
             resultEntity = new ResultEntity(ExceptionEnum.SUCCESS);

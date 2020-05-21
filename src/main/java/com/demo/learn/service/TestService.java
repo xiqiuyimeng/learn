@@ -15,7 +15,7 @@ public class TestService {
         if (name.equals("ok")) {
             throw new BusinessException(ExceptionEnum.UNDEFINED);
         } else {
-            throw new RuntimeException("运行时异常");
+//            throw new RuntimeException("运行时异常");
         }
     }
 

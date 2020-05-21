@@ -9,7 +9,8 @@ package com.demo.learn.exception;
 public enum ExceptionEnum implements BaseExceptionInter{
 
     SUCCESS(1000, "ok"),
-    ILLEGALPARAM(-1, "参数非法"),
+    HANDLER_NOT_FOUND(404, "未找到合适的处理器"),
+    ILLEGAL_PARAM(-1, "参数非法"),
     NPE(1, "空指针异常"),
     UNDEFINED(2, "未知异常");
 
