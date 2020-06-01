@@ -1,6 +1,5 @@
 package com.demo.learn.controller;
 
-import com.demo.learn.exception.BusinessException;
 import com.demo.learn.exception.ExceptionEnum;
 import com.demo.learn.result.ResultEntity;
 import com.demo.learn.service.TestService;
@@ -23,13 +22,10 @@ public class TestController {
     @GetMapping("test")
     public ResponseEntity<?> testGet(@RequestParam(required = false) String name){
         ResultEntity resultEntity;
-        if (name == null) throw new BusinessException(ExceptionEnum.NPE);
-        if (name.equals("test")) {
-            resultEntity = new ResultEntity(ExceptionEnum.ILLEGAL_PARAM);
-        } else {
-            testService.checkName(name);
-            resultEntity = new ResultEntity(ExceptionEnum.SUCCESS);
-        }
+        ExceptionEnum.NPE.assertNonNull(name);
+        ExceptionEnum.ILLEGAL_PARAM.assertTrue(name.equals("test"));
+        testService.checkName(name);
+        resultEntity = new ResultEntity(ExceptionEnum.SUCCESS);
         return ResponseEntity.ok().body(resultEntity);
     }
 
