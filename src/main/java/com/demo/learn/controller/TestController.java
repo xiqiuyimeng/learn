@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+
 /**
  * @author luwt
  * @date 2020/5/13.
@@ -22,6 +26,10 @@ public class TestController {
     @GetMapping("test")
     public ResponseEntity<?> testGet(@RequestParam(required = false) String name){
         ResultEntity resultEntity;
+        HashMap map = new HashMap();
+        map.put("a", new String[]{});
+        String[] strings = (String[]) map.get("a");
+        ExceptionEnum.ILLEGAL_PARAM.assertNonNull(strings);
         ExceptionEnum.NPE.assertNonNull(name);
         ExceptionEnum.ILLEGAL_PARAM.assertTrue(name.equals("test"));
         testService.checkName(name);

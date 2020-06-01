@@ -1,6 +1,7 @@
 package com.demo.learn.exception;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -25,6 +26,12 @@ public interface BusinessExceptionAssert extends BaseExceptionInter{
                 || (object instanceof String && StringUtils.isBlank(String.valueOf(object)))
                 || (object instanceof Collection && CollectionUtils.isEmpty((Collection<?>) object))
                 || (object instanceof Map && MapUtils.isEmpty((Map<?, ?>) object))) {
+            throw new BusinessException(this);
+        }
+    }
+
+    default <T> void assertNonNull(T[] t) {
+        if (ArrayUtils.isEmpty(t)) {
             throw new BusinessException(this);
         }
     }
