@@ -32,4 +32,8 @@ public enum ExceptionEnum implements BaseExceptionInter, BusinessExceptionAssert
     public String getMessage(){
         return message;
     }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

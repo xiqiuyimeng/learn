@@ -26,12 +26,12 @@ public class TestController {
     @GetMapping("test")
     public ResponseEntity<?> testGet(@RequestParam(required = false) String name){
         ResultEntity resultEntity;
-        HashMap map = new HashMap();
-        map.put("a", new String[]{});
-        String[] strings = (String[]) map.get("a");
-        ExceptionEnum.ILLEGAL_PARAM.assertNonNull(strings);
-        ExceptionEnum.NPE.assertNonNull(name);
-        ExceptionEnum.ILLEGAL_PARAM.assertTrue(name.equals("test"));
+//        HashMap map = new HashMap();
+//        map.put("a", new String[]{});
+//        String[] strings = (String[]) map.get("a");
+//        ExceptionEnum.ILLEGAL_PARAM.assertNonNull(strings);
+//        ExceptionEnum.NPE.assertNonNull(name);
+//        ExceptionEnum.ILLEGAL_PARAM.assertTrue(name.equals("test"));
         testService.checkName(name);
         resultEntity = new ResultEntity(ExceptionEnum.SUCCESS);
         return ResponseEntity.ok().body(resultEntity);

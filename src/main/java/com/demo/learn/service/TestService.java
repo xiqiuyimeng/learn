@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 public class TestService {
 
     public void checkName(String name) {
-        ExceptionEnum.UNDEFINED.assertTrue(name.equals("ok"));
+        ExceptionEnum anEnum = ExceptionEnum.UNDEFINED;
+        anEnum.setMessage("自定义异常信息");
+        anEnum.assertTrue(name.equals("ok"));
     }
 
 }
