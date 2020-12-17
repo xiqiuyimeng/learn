@@ -139,7 +139,11 @@ echo "------生成证书结束------"
 
 # 修改配置文件
 echo "------开始配置------"
-LINE_NUM=`sed '/^ExecStart=\/usr\/bin\/dockerd -H fd:\/\/ --containerd=\/run\/containerd\/containerd.sock\s*$/=' -n $DOCKER_SERVICE_PATH`
+# 需要分开匹配，社区版的也就是用菜鸟教程安装的，一种是yum装的，配置文件内容不一致
+# yum版存在多行
+LINE_NUM=`sed '/^ExecStart=.*\\$/=' -n $DOCKER_SERVICE_PATH`
+# 社区版，单行
+COMMUNITY_LINE_NUM=`sed '/^ExecStart=\/usr\/bin\/dockerd -H fd:\/\/ --containerd=\/run\/containerd\/containerd.sock\s*$/=' -n $DOCKER_SERVICE_PATH`
 if [[ $LINE_NUM && $LINE_NUM -gt 0 ]]; then
     # 注释之前的
     sed "$LINE_NUM s/^/#/" -i $DOCKER_SERVICE_PATH
