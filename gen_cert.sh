@@ -181,3 +181,26 @@ echo "------重启docker服务------"
 systemctl daemon-reload
 systemctl restart docker
 echo "------重启完成------"
+
+# 处理防火墙端口
+echo "------处理防火墙端口开始------"
+firewall-cmd --state &> /dev/null
+if [ $? -eq 0 ]; then
+    echo "防火墙开启"
+    firewall-cmd --zone=public --query-port=2376/tcp &> /dev/null
+    if [ $? -eq 0 ]; then
+        echo "2376端口已开放"
+    else
+        firewall-cmd --zone=public --add-port=2376/tcp --permanent &> /dev/null \
+        && firewall-cmd --reload &> /dev/null
+        if [ $? -eq 0 ]; then
+            echo "成功开放2376 tcp端口"
+        else
+            echo "2376端口开放失败"
+            exit 3
+        fi
+    fi
+else
+    echo "防火墙已关闭，2376端口可用"
+fi
+echo "------处理防火墙端口结束------"
