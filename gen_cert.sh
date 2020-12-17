@@ -18,16 +18,32 @@ COMMON_NAME=localhost
 
 # 根据网卡名称获取ip地址
 function getIP() {
-    NETWORK_CARD_NAME=`ls /etc/sysconfig/network-scripts | grep 'ifcfg-' | grep -v 'ifcfg-lo' | cut -d "-" -f2`
-    IP_INFO_NUM=$((`ifconfig | sed "/^$NETWORK_CARD_NAME/=" -n` + 1))
-    ifconfig | sed "$IP_INFO_NUM p" -n | awk '{print $2}'
+    # /sys/class/net 目录下存储了所有网卡信息，子目录均为网卡名，
+    # /sys/devices/virtual/net/ 目录下存储了所有的虚拟网卡名
+    NETWORK_CARD_NAME=`ls /sys/class/net | grep -v "\`ls /sys/devices/virtual/net/\`"`
+    for net_name in $NETWORK_CARD_NAME
+    do
+        possible_ip=`ip a | sed "/$net_name$/p" -n | awk '{print $2}'| awk -F/ '{print$1}'`
+        if [ $possible_ip ]; then
+            echo $possible_ip
+        fi
+    done
 }
 
-# 主机的ip
-IP=`getIP`
-IP_STR="IP.2 = $IP"
+# 拼接ip字符串
+function getIPStr() {
+    ix=1
+    for ip in `getIP`
+    do
+        let ix+=1
+        echo "IP.$ix = $ip\n"
+    done
+}
+
+# 主机的ip字符串
+IP_STR=$(echo `getIPStr` | sed 's/\\n\s/\\n/g')
 HOSTNAME_STR="DNS.2 = `hostname`"
-echo "本机ip为：$IP，hostname为：`hostname`"
+echo -e "本机ip为：\n`getIP`\nhostname为：`hostname`"
 
 # 定义创建证书函数，第一个参数是文件名，第二个参数是创建语句
 function makeCert() {
@@ -76,7 +92,7 @@ makeCert $SERVER_KEY_TMP_PEM "$SERVER_KEY_TMP_PEM_SH"
 
 # 创建服务端配置文件server-cert.txt
 SERVER_CERT_TXT=$DOCKER_CERT_PATH/server-cert.txt
-SERVER_CERT_TXT_SH="echo -e \"[req]\ndistinguished_name = req_distinguished_name\nreq_extensions = v3_req\n\n[req_distinguished_name]\ncommonName = TypeCommonNameHere\n\n[v3_req]\nsubjectAltName = @alt_names\n\n[alt_names]\nIP.1 = 127.0.0.1\nDNS.1 = localhost\n$IP_STR\n$HOSTNAME_STR\" > server-cert.txt"
+SERVER_CERT_TXT_SH="echo -e \"[req]\ndistinguished_name = req_distinguished_name\nreq_extensions = v3_req\n\n[req_distinguished_name]\ncommonName = TypeCommonNameHere\n\n[v3_req]\nsubjectAltName = @alt_names\n\n[alt_names]\nIP.1 = 127.0.0.1\nDNS.1 = localhost\n$IP_STR$HOSTNAME_STR\" > server-cert.txt"
 makeCert $SERVER_CERT_TXT "$SERVER_CERT_TXT_SH"
 
 # 创建server.csr
