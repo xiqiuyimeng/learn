@@ -56,12 +56,18 @@ function makeCert() {
             exit 1
         else
             echo "$1 创建成功"
+            # 修改权限为只读
+            PERM_NUM=`stat -c %a $1`
+            if [ $PERM_NUM -ne 440 ]; then
+                chmod 440 $1
+                echo "========== 修改$1权限为只读成功"
+            fi
         fi
     fi
+    echo ""
 }
 
 echo "------开始生成证书------"
-
 # 创建证书存放路径
 if [ -d $DOCKER_CERT_PATH ]; then
     echo "$DOCKER_CERT_PATH 已存在，跳过"
@@ -134,8 +140,8 @@ makeCert $SERVER_KEY_PEM "$SERVER_KEY_PEM_SH"
 KEY_PEM=$DOCKER_CERT_PATH/key.pem
 KEY_PEM_SH="openssl rsa -in key-tmp.pem -passin \"pass:$PASSWORD\" -out key.pem"
 makeCert $KEY_PEM "$KEY_PEM_SH"
-
 echo "------生成证书结束------"
+echo ""
 
 # 修改配置文件
 echo "------开始配置------"
@@ -166,11 +172,7 @@ else
     echo "配置已存在，按本次生成结果应配置为：ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM，请检查当前配置是否正确。"
 fi
 echo "------配置结束------"
-
-# 修改权限为只读
-echo "------修改权限为只读开始------"
-chmod -v 400 ca-key.pem ca.pem ca.srl cert.pem client.csr key.pem key-tmp.pem server-cert.pem server.csr server-key.pem server-key-tmp.pem
-echo "------修改权限结束------"
+echo ""
 
 # 打包客户端证书ca.pem cert.pem key.pem
 echo "------开始打包客户端证书------"
@@ -178,6 +180,7 @@ TARBALL_NAME="`hostname`-client-certs.tar.gz"
 tar -czvf $TARBALL_NAME ca.pem key.pem cert.pem
 echo "客户端证书文件已经打包 ==> `pwd`/$TARBALL_NAME"
 echo "------打包客户端证书结束------"
+echo ""
 
 # 重启docker
 # 如果信任脚本，可以放开以下语句
@@ -185,6 +188,7 @@ echo "------重启docker服务------"
 systemctl daemon-reload
 systemctl restart docker
 echo "------重启完成------"
+echo ""
 
 # 处理防火墙端口
 echo "------处理防火墙端口开始------"
