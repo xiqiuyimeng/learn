@@ -13,16 +13,5 @@ function getIP() {
     done
 }
 
-function getIPStr() {
-    ix=1
-    for ip in `getIP`
-    do
-        let ix+=1
-        echo "IP.$ix = $ip\n"
-    done
-}
-
 # 打印
-IP_STR=$(echo `getIPStr` | sed 's/\\n\s/\\n/g')
-HOSTNAME_STR="DNS.2 = `hostname`"
 echo -e "本机ip为：\n`getIP`\nhostname为：`hostname`"
