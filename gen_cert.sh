@@ -147,29 +147,39 @@ echo ""
 echo "------开始配置------"
 # 需要分开匹配，社区版的也就是用菜鸟教程安装的，一种是yum装的，配置文件内容不一致
 # yum版存在多行
-LINE_NUM=`sed '/^ExecStart=.*\\$/=' -n $DOCKER_SERVICE_PATH`
-# 社区版，单行
-COMMUNITY_LINE_NUM=`sed '/^ExecStart=\/usr\/bin\/dockerd -H fd:\/\/ --containerd=\/run\/containerd\/containerd.sock\s*$/=' -n $DOCKER_SERVICE_PATH`
-if [[ $LINE_NUM && $LINE_NUM -gt 0 ]]; then
-    # 注释之前的
-    sed "$LINE_NUM s/^/#/" -i $DOCKER_SERVICE_PATH
-    if [ $? -eq 0 ]; then
-        echo "已注释第 $LINE_NUM 行的原有配置"
+EXECSTART_NUM=`sed '/^\[Service\]$/,/^\[.*\]$/p' -n $DOCKER_SERVICE_PATH | sed '$d;/^$/d' | sed '/^ExecStart=/,/^[A-Z]/p' -n | sed '$d' | sed '$=' -n`
+if [ $EXECSTART_NUM -eq 1 ]; then
+    # 处理社区版docker的配置文件，单行形式，获取在文件中的行数
+    LINE_NUM=`sed '/^ExecStart=/=' -n $DOCKER_SERVICE_PATH`
+    # 判断当前配置中是否包含目标配置，如果不包含，注释当前行，在下一行进行配置，包含则提示已存在，请核对
+    TARGET_CONFIG="-H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM"
+    CONFIGURED=`sed "$LINE_NUM p" -n $DOCKER_SERVICE_PATH | sed "\#$TARGET_CONFIG#=" -n`
+    if [[ $CONFIGURED && $CONFIGURED -gt 0 ]]; then
+        echo "配置已存在，请核对配置中是否包含 $TARGET_CONFIG"
     else
-        echo "注释第 $LINE_NUM 的配置失败"
-        exit 1
+        echo "配置不存在，开始进行配置"
+        OLD_CONFIG=`sed "$LINE_NUM p" -n $DOCKER_SERVICE_PATH`
+        # 注释之前的配置
+        sed "$LINE_NUM s/^/#/" -i $DOCKER_SERVICE_PATH
+        if [ $? -eq 0 ]; then
+            echo "已注释第 $LINE_NUM 行的原有配置"
+        else
+            echo "注释第 $LINE_NUM 的配置失败"
+            exit 4
+        fi
+        # 添加新值
+        sed "$LINE_NUM a\\$OLD_CONFIG -H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM" -i $DOCKER_SERVICE_PATH
+        if [ $? -eq 0 ]; then
+            echo "在第 $((LINE_NUM + 1)) 行增加配置"
+        else
+            echo "在第 $((LINE_NUM + 1)) 行增加配置失败"
+            exit 2
+        fi
+        echo "配置成功"
     fi
-    # 添加新值
-    sed "$LINE_NUM a\ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM" -i $DOCKER_SERVICE_PATH
-    if [ $? -eq 0 ]; then
-        echo "在第 $((LINE_NUM + 1)) 行增加配置"
-    else
-        echo "在第 $((LINE_NUM + 1)) 行增加配置失败"
-        exit 2
-    fi
-    echo "配置成功"
 else
-    echo "配置已存在，按本次生成结果应配置为：ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM，请检查当前配置是否正确。"
+    # 处理yum在线安装docker的配置文件，多行形式
+    echo "yum版docker"
 fi
 echo "------配置结束------"
 echo ""
