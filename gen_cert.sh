@@ -53,6 +53,7 @@ function makeCert() {
       # 执行命令并丢弃输出
         eval $2 &>> /dev/null
         if [ $? -ne 0 ]; then
+            echo "$1 创建失败"
             exit 1
         else
             echo "$1 创建成功"
@@ -72,9 +73,10 @@ echo "------开始生成证书------"
 if [ -d $DOCKER_CERT_PATH ]; then
     echo "$DOCKER_CERT_PATH 已存在，跳过"
 else
-    mkdir $DOCKER_CERT_PATH && cd $DOCKER_CERT_PATH
+    mkdir $DOCKER_CERT_PATH
     echo "$DOCKER_CERT_PATH 创建成功"
 fi
+cd $DOCKER_CERT_PATH
 
 # 创建ca.srl
 CA_SRL=$DOCKER_CERT_PATH/ca.srl
@@ -148,11 +150,11 @@ echo "------开始配置------"
 # 需要分开匹配，社区版的也就是用菜鸟教程安装的，一种是yum装的，配置文件内容不一致
 # yum版存在多行
 EXECSTART_NUM=`sed '/^\[Service\]$/,/^\[.*\]$/p' -n $DOCKER_SERVICE_PATH | sed '$d;/^$/d' | sed '/^ExecStart=/,/^[A-Z]/p' -n | sed '$d' | sed '$=' -n`
+LINE_NUM=`sed '/^ExecStart=/=' -n $DOCKER_SERVICE_PATH`
+TARGET_CONFIG="-H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM"
 if [ $EXECSTART_NUM -eq 1 ]; then
     # 处理社区版docker的配置文件，单行形式，获取在文件中的行数
-    LINE_NUM=`sed '/^ExecStart=/=' -n $DOCKER_SERVICE_PATH`
     # 判断当前配置中是否包含目标配置，如果不包含，注释当前行，在下一行进行配置，包含则提示已存在，请核对
-    TARGET_CONFIG="-H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM"
     CONFIGURED=`sed "$LINE_NUM p" -n $DOCKER_SERVICE_PATH | sed "\#$TARGET_CONFIG#=" -n`
     if [[ $CONFIGURED && $CONFIGURED -gt 0 ]]; then
         echo "配置已存在，请核对配置中是否包含 $TARGET_CONFIG"
@@ -165,7 +167,7 @@ if [ $EXECSTART_NUM -eq 1 ]; then
             echo "已注释第 $LINE_NUM 行的原有配置"
         else
             echo "注释第 $LINE_NUM 的配置失败"
-            exit 4
+            exit 2
         fi
         # 添加新值
         sed "$LINE_NUM a\\$OLD_CONFIG -H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM" -i $DOCKER_SERVICE_PATH
@@ -173,13 +175,39 @@ if [ $EXECSTART_NUM -eq 1 ]; then
             echo "在第 $((LINE_NUM + 1)) 行增加配置"
         else
             echo "在第 $((LINE_NUM + 1)) 行增加配置失败"
-            exit 2
+            exit 3
         fi
         echo "配置成功"
     fi
 else
     # 处理yum在线安装docker的配置文件，多行形式
-    echo "yum版docker"
+    END_LINE_NUM=`expr $LINE_NUM + $EXECSTART_NUM - 1`
+    echo "ExecStart配置项开始行号：$LINE_NUM，结束行号：$END_LINE_NUM"
+    # 判断是否已经配置
+    CONFIGURED=`sed "$LINE_NUM,$END_LINE_NUM p" -n $DOCKER_SERVICE_PATH | sed "\#$TARGET_CONFIG#=" -n`
+    if [[ $CONFIGURED && $CONFIGURED -gt 0 ]]; then
+        echo "配置已存在，请核对配置中是否包含 $TARGET_CONFIG"
+    else
+        echo "配置不存在，开始进行配置"
+        # 在原配置下一行，拷贝原配置一份，注释原配置，将证书配置添加于新配置处。
+        OLD_CONFIG=`sed "$LINE_NUM,$END_LINE_NUM p" -n $DOCKER_SERVICE_PATH`
+        sed "$LINE_NUM,$END_LINE_NUM s/^/#/" -i $DOCKER_SERVICE_PATH
+        if [ $? -eq 0 ]; then
+            echo "已注释 $LINE_NUM 行 到 $END_LINE_NUM 行的原有配置"
+        else
+            echo "注释 $LINE_NUM 行 到 $END_LINE_NUM 行的配置失败"
+            exit 4
+        fi
+        sed "$END_LINE_NUM a\\$OLD_CONFIG -H tcp://0.0.0.0:2376 -H unix://var/run/docker.sock -D --tlsverify --tlscert=$SERVER_CERT_PEM --tlskey=$SERVER_KEY_PEM --tlscacert=$CA_PEM" -i $DOCKER_SERVICE_PATH \
+        && sed "$((END_LINE_NUM + 1)), $((END_LINE_NUM + $EXECSTART_NUM - 1)) s/$/\\\/" -i $DOCKER_SERVICE_PATH
+        if [ $? -eq 0 ]; then
+            echo "在第 $((END_LINE_NUM + 1)) 行增加配置 $EXECSTART_NUM 行"
+        else
+            echo "在第 $((END_LINE_NUM + 1)) 行增加配置失败"
+            exit 5
+        fi
+        echo "配置成功"
+    fi
 fi
 echo "------配置结束------"
 echo ""
@@ -195,8 +223,13 @@ echo ""
 # 重启docker
 # 如果信任脚本，可以放开以下语句
 echo "------重启docker服务------"
-systemctl daemon-reload
-systemctl restart docker
+systemctl daemon-reload && systemctl restart docker
+if [ $? -eq 0 ]; then
+    echo "重启成功"
+else
+    echo "重启失败，请查看"
+    exit 6
+fi
 echo "------重启完成------"
 echo ""
 
@@ -215,7 +248,7 @@ if [ $? -eq 0 ]; then
             echo "成功开放2376 tcp端口"
         else
             echo "2376端口开放失败"
-            exit 3
+            exit 7
         fi
     fi
 else
