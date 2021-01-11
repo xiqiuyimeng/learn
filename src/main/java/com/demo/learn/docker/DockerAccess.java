@@ -10,13 +10,18 @@ import com.github.dockerjava.api.model.PushResponseItem;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.core.util.CompressArchiveUtil;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import scala.tools.nsc.interactive.tests.core.TestResources;
+import com.google.common.collect.Sets;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,7 +47,7 @@ public class DockerAccess {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         dockerClient = getDockerClient();
 //        getInfo();
         String repo = "harbor.cvhub.com/library/test", tag = "v1";
@@ -53,6 +58,25 @@ public class DockerAccess {
 //        loadImage();
 //        dockerClient.close();
         //pushImage(repo + ":" + tag);
+        buildImage();
+    }
+
+    public static void buildImage()throws Exception {
+        System.out.println("------------------构建镜像开始---------------------");
+        File baseDir = fileFromBuildTestResource("D:/test/");
+        Collection<File> files = FileUtils.listFiles(baseDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        File tarFile = CompressArchiveUtil.archiveTARFiles(baseDir, files, UUID.randomUUID().toString());
+        String imageId = dockerClient.buildImageCmd(new FileInputStream(tarFile))
+//                .withDockerfile(new File("D:/test/file"))
+                .withTags(Sets.newHashSet("java-docker-test:v1"))
+                .start()
+                .awaitImageId();
+        System.out.println(imageId);
+        System.out.println("------------------构建镜像结束---------------------");
+    }
+
+    private static File fileFromBuildTestResource(String resource) {
+        return new File(resource);
     }
 
     public static void getInfo() {
@@ -80,7 +104,7 @@ public class DockerAccess {
             System.out.println("----加载开始----");
             Void exec = dockerClient.loadImageCmd(uploadStream).exec();
             System.out.println(exec);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             System.out.println("----加载结束----");
