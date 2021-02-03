@@ -27,7 +27,8 @@ echo "**********$image 镜像构建开始**********"
 # docker images | awk '$1 != "REPOSITORY" && $2 != "TAG" {printf("%s:%s\n",$1,$2)}' 等效于
 # docker images | sed '2,$p' -n | awk '{printf("%s:%s", $1, $2)}' 等效于
 # docker images | sed '2,$p' -n | awk '{print$1,$2}' OFS=":"
-if [ `docker images | awk '$1 != "REPOSITORY" && $2 != "TAG" {printf("%s:%s\n",$1,$2)}' | grep "$image"` == $image ]; then
+search=`docker images | awk '$1 != "REPOSITORY" && $2 != "TAG" {printf("%s:%s\n",$1,$2)}' | grep "$image"`
+if [[ $search && $search == $image ]]; then
     echo "$image 镜像已存在，跳过"
 else
 	docker build -t $image -f $file .
