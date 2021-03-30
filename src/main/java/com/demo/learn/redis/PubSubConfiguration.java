@@ -12,6 +12,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 /**
  * @author luwt
  * @date 2021/1/19.
+ * 需要redis服务端开启配置，notify-keyspace-events "" -> notify-keyspace-events Ex
  */
 @Configuration
 @Import(value = LearnApplication.class)
