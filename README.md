@@ -1,2 +1,1 @@
-# spring-global-exception
-学习springboot的全局异常处理写法，简单的一个示例
+# 学习使用的springboot项目，用来保存学习代码
