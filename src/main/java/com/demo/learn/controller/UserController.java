@@ -2,6 +2,7 @@ package com.demo.learn.controller;
 
 import com.demo.learn.model.User;
 import com.demo.learn.service.UserService;
+import com.demo.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,9 @@ import java.util.List;
 @RequestMapping(value = "user")
 @ResponseStatus(HttpStatus.OK)
 public class UserController {
+
+    @Autowired
+    TestService testService;
 
     @Autowired
     UserService userService;
@@ -43,6 +47,11 @@ public class UserController {
     @GetMapping("list")
     public List<User> getList(){
         return userService.getUserList();
+    }
+
+    @GetMapping("hello")
+    public String hello() {
+        return testService.testMethod();
     }
 
 }

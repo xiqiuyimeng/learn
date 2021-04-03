@@ -1,10 +1,8 @@
 package com.demo.learn.redis;
 
-import com.demo.learn.LearnApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
@@ -15,7 +13,6 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
  * 需要redis服务端开启配置，notify-keyspace-events "" -> notify-keyspace-events Ex
  */
 @Configuration
-@Import(value = LearnApplication.class)
 public class PubSubConfiguration {
 
     @Autowired
