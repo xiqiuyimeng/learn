@@ -1,6 +1,8 @@
-package com.demo.learn.annotation;
+package com.demo.annotation;
 
-import lombok.extern.slf4j.Slf4j;
+import com.demo.TestAutoConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -15,9 +17,10 @@ import java.util.List;
  * @author luwt
  * @date 2020/9/4.
  */
-@Slf4j
 @Component
 public class ResolverBeanPostProcessor implements BeanPostProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(ResolverBeanPostProcessor.class);
 
     @Autowired
     MyRequestParamResolver myRequestParamResolver;

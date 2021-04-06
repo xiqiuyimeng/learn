@@ -1,6 +1,6 @@
 package com.demo.learn.controller;
 
-import com.demo.learn.annotation.MyFile;
+import com.demo.annotation.MyFile;
 import com.demo.learn.model.User;
 import com.demo.learn.service.UserService;
 import com.demo.service.TestService;

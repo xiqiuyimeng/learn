@@ -1,4 +1,4 @@
-package com.demo.learn.annotation;
+package com.demo.annotation;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

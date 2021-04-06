@@ -1,5 +1,7 @@
 package com.demo;
 
+import com.demo.annotation.MyRequestParamResolver;
+import com.demo.annotation.ResolverBeanPostProcessor;
 import com.demo.service.TestService;
 import com.demo.service.impl.TestServiceImpl;
 import org.slf4j.Logger;
@@ -32,6 +34,16 @@ public class TestAutoConfiguration {
         TestService testService = new TestServiceImpl(testProperties.getName(), testProperties.getMsg());
         log.info("注册结束!");
         return testService;
+    }
+
+    @Bean
+    public ResolverBeanPostProcessor resolverBeanPostProcessor() {
+        return new ResolverBeanPostProcessor();
+    }
+
+    @Bean
+    public MyRequestParamResolver myRequestParamResolver() {
+        return new MyRequestParamResolver();
     }
 
 }
