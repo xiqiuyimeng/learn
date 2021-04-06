@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author luwt
  * @date 2021/3/15.
  */
-@Aspect
+//@Aspect
 @Slf4j
-@Component
+//@Component
 public class LogAspect {
 
     @Pointcut("execution(public * com.demo.learn.controller.*.*(..))")

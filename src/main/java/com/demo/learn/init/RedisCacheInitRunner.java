@@ -2,7 +2,7 @@ package com.demo.learn.init;
 
 import com.demo.learn.dao.UserMapper;
 import com.demo.learn.model.User;
-import com.demo.learn.redis.RedisConfig;
+import com.demo.learn.util.redis.RedisConfig;
 import com.demo.learn.util.gson.GsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -42,9 +42,9 @@ public class RedisCacheInitRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<User> userList = userMapper.getUserList();
-        useTemplate(userList);
-        useJedis(userList);
+//        List<User> userList = userMapper.getUserList();
+//        useTemplate(userList);
+//        useJedis(userList);
     }
 
     private void useTemplate(List<User> userList){

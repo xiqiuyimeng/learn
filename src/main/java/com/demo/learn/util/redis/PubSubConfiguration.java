@@ -1,4 +1,4 @@
-package com.demo.learn.redis;
+package com.demo.learn.util.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

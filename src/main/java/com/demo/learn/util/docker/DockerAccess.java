@@ -1,4 +1,4 @@
-package com.demo.learn.docker;
+package com.demo.learn.util.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
