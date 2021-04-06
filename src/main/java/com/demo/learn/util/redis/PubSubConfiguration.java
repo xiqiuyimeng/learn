@@ -12,7 +12,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
  * @date 2021/1/19.
  * 需要redis服务端开启配置，notify-keyspace-events "" -> notify-keyspace-events Ex
  */
-@Configuration
+//@Configuration
 public class PubSubConfiguration {
 
     @Autowired
@@ -29,7 +29,7 @@ public class PubSubConfiguration {
             @Autowired RedisConnectionFactory redisConnectionFactory) {
         RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
         redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
-        redisMessageListenerContainer.addMessageListener(redisMsgListener, expiredTopic());
+//        redisMessageListenerContainer.addMessageListener(redisMsgListener, expiredTopic());
         return redisMessageListenerContainer;
     }
 

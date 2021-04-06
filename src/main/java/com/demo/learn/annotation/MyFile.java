@@ -1,5 +1,8 @@
 package com.demo.learn.annotation;
 
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.web.bind.annotation.ValueConstants;
+
 import java.lang.annotation.*;
 
 /**
@@ -11,13 +14,14 @@ import java.lang.annotation.*;
 @Documented
 public @interface MyFile {
 
+    @AliasFor("name")
     String value() default "";
 
-//    String name() default "";
-//
-//    boolean required() default true;
-//
-//    String defaultValue() default ValueConstants.DEFAULT_NONE;
+    @AliasFor("value")
+    String name() default "";
 
+    boolean required() default true;
+
+    String defaultValue() default ValueConstants.DEFAULT_NONE;
 
 }

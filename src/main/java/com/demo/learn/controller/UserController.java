@@ -1,11 +1,13 @@
 package com.demo.learn.controller;
 
+import com.demo.learn.annotation.MyFile;
 import com.demo.learn.model.User;
 import com.demo.learn.service.UserService;
 import com.demo.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -52,6 +54,24 @@ public class UserController {
     @GetMapping("hello")
     public String hello() {
         return testService.testMethod();
+    }
+
+    @PostMapping("file")
+    public String testFile(@MyFile(value = "file") MultipartFile file) throws Exception{
+        userService.uploadFile(file);
+        return "ok";
+    }
+
+    @PostMapping("fileArr")
+    public String testFileArr(@MyFile("files") MultipartFile[] files) throws Exception{
+        userService.uploadFileArr(files);
+        return "ok";
+    }
+
+    @PostMapping("files")
+    public String testFiles(@MyFile("files") List<MultipartFile> files) throws Exception{
+        userService.uploadFiles(files);
+        return "ok";
     }
 
 }
