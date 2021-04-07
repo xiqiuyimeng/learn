@@ -53,7 +53,29 @@
         - 远程分支与本地分支的联系：
             1. 建立联系：`git branch --set-upstream-to origin/branch_name`（同样可以用 -u 代替长选项）
             2. 取消联系：`git branch --unset-upstream`
-
-        - 获取远程分支的所有变化：`git fetch`
+- 获取远程分支的所有变化：`git fetch`
         - 拉取远程分支的改变：`git pull`
         - 删除远程分支：`git push origin -d branch_name` or `git push origin :branch_name`
+        
+    3. fork代码仓库：
+    
+        - 从github仓库fork出一份代码到自己的仓库以后，在本地使用命令行，应该有两组远程信息：
+    
+            ~~~shell
+            # 第一组为自己的远程仓库的信息，例如：
+            origin  https://github.com/xxxxxx/test.git (fetch)
+            origin  https://github.com/xxxxxx/test.git (push)
+            
+            # 第二组为fork的远程仓库的信息，例如：
+            upstream       https://github.com/xxx-test/test.git (fetch)
+            upstream       https://github.com/xxx-test/test.git (push)
+            # origin默认是自己远程仓库的名称，upstream为fork的远程仓库名，所以使用命令时，可以指定更新哪个仓库的代码，例如更新fork的远程仓库代码
+            git fetch upstream
+            # 接下来将fork的远程分支对应的改动合并到本地分支中
+            git merge upstream/master
+            # 合并后，本地的分支已经保持与fork的远程分支一致，接下来只需要推送本地分支到自己的远程，就可以使自己的远程和fork的远程保持一致
+    git push origin master
+            
+            ~~~
+            
+            
