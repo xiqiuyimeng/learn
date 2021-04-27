@@ -1,7 +1,6 @@
 package com.demo.annotation;
 
 import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ValueConstants;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver;
@@ -16,7 +15,6 @@ import java.util.List;
  * @author luwt
  * @date 2020/9/4.
  */
-@Component
 public class MyRequestParamResolver extends AbstractNamedValueMethodArgumentResolver {
 
     @Override
