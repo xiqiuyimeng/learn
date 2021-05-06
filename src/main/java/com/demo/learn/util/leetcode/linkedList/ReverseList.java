@@ -48,28 +48,11 @@ public class ReverseList {
         SingleListNode headNode = SingleListNode.getTestData();
         // 反转为 n5 -> n4 -> n3 -> n2 -> n1
         // n1 <- n2 <- n3 <- n4 <- n5
-        print(headNode);
+        SingleListNode.print(headNode);
 //        SingleListNode node = iterate(node1);
 //        print(node);
         SingleListNode recurNode = recursion(headNode);
-        print(recurNode);
-    }
-
-    public static void print(SingleListNode node) {
-        str = "";
-        show(node);
-        System.out.println(str);
-    }
-
-    static String str = "";
-
-    public static void show(SingleListNode node) {
-        if (node.next != null) {
-            str += node.value + " -> ";
-            show(node.next);
-        } else {
-            str += node.value;
-        }
+        SingleListNode.print(recurNode);
     }
 
 

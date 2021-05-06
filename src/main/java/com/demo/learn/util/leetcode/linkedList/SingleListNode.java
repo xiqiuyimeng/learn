@@ -17,10 +17,24 @@ public class SingleListNode {
 
     public static SingleListNode getTestData() {
         // n1 -> n2 -> n3 -> n4 -> n5
-        SingleListNode node5 = new SingleListNode(5, null);
-        SingleListNode node4 = new SingleListNode(4, node5);
-        SingleListNode node3 = new SingleListNode(3, node4);
-        SingleListNode node2 = new SingleListNode(2, node3);
-        return new SingleListNode(1, node2);
+        int[] array = {1, 2, 3, 4, 5};
+        return ArrayToLinkedList.getNodes(array);
+    }
+
+    public static void print(SingleListNode node) {
+        str = "";
+        show(node);
+        System.out.println(str);
+    }
+
+    static String str = "";
+
+    public static void show(SingleListNode node) {
+        if (node.next != null) {
+            str += node.value + " -> ";
+            show(node.next);
+        } else {
+            str += node.value;
+        }
     }
 }
