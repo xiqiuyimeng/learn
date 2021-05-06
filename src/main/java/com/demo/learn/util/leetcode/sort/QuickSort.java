@@ -1,5 +1,7 @@
 package com.demo.learn.util.leetcode.sort;
 
+import java.util.Arrays;
+
 /**
  * @author luwt
  * @date 2021/5/6.
@@ -8,7 +10,9 @@ package com.demo.learn.util.leetcode.sort;
 public class QuickSort {
 
     public static void main(String[] args) {
-
+        int[] array = {1, 3, 2, 5, 6, 4};
+        sort(array, 0, array.length - 1);
+        System.out.println(Arrays.toString(array));
     }
 
     // 快排
