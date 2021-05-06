@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -17,9 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author luwt
  * @date 2021/3/15.
  */
-//@Aspect
 @Slf4j
-//@Component
 public class LogAspect {
 
     @Pointcut("execution(public * com.demo.learn.controller.*.*(..))")
