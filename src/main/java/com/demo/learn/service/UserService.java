@@ -18,9 +18,4 @@ public interface UserService {
 
     List<User> getUserList();
 
-    void uploadFile(MultipartFile file);
-
-    void uploadFileArr(MultipartFile[] files);
-
-    void uploadFiles(List<MultipartFile> files);
 }

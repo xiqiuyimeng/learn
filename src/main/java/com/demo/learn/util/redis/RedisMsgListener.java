@@ -14,7 +14,7 @@ import java.util.Arrays;
  * @date 2021/1/19.
  */
 @Slf4j
-@Component
+//@Component
 public class RedisMsgListener implements MessageListener {
 
     @Autowired

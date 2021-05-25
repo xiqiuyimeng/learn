@@ -5,9 +5,9 @@ import com.demo.learn.model.Good;
 import com.demo.learn.service.GoodService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.redisson.Redisson;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
+//import org.redisson.Redisson;
+//import org.redisson.api.RLock;
+//import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -26,8 +26,8 @@ public class GoodServiceImpl implements GoodService {
     private GoodMapper goodMapper;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
-    @Autowired
-    private RedissonClient redisson;
+//    @Autowired
+//    private RedissonClient redisson;
 
     @Override
     public Good getGood(Integer id) {
@@ -130,16 +130,16 @@ public class GoodServiceImpl implements GoodService {
      * @param goodName
      * @return
      */
-    public boolean buyRedisson(String goodName) {
-        // redisson 实现分布式锁
-        RLock redissonLock = redisson.getLock(goodName);
-        redissonLock.lock(10, TimeUnit.SECONDS);
-        try {
-            return buyDB(goodName);
-        } finally {
-            redissonLock.unlock();
-        }
-    }
+//    public boolean buyRedisson(String goodName) {
+//        // redisson 实现分布式锁
+//        RLock redissonLock = redisson.getLock(goodName);
+//        redissonLock.lock(10, TimeUnit.SECONDS);
+//        try {
+//            return buyDB(goodName);
+//        } finally {
+//            redissonLock.unlock();
+//        }
+//    }
 
     /**
      * 具体抢购，与数据库交互逻辑

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @date 2021/3/26.
  */
 @Slf4j
-@Component
+//@Component
 public class RedisCacheInitRunner implements CommandLineRunner {
 
     private static final String REDIS_TEMPLATE_KEY = "template";
