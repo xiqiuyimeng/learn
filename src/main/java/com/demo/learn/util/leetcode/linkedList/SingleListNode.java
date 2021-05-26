@@ -6,9 +6,9 @@ package com.demo.learn.util.leetcode.linkedList;
  */
 public class SingleListNode {
 
-    int value;
+    public int value;
 
-    SingleListNode next;
+    public SingleListNode next;
 
     public SingleListNode(int value, SingleListNode next) {
         this.value = value;

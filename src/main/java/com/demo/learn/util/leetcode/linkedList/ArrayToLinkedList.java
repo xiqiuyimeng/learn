@@ -19,9 +19,9 @@ public class ArrayToLinkedList {
     }
 
     // 构建链表 n1 -> n2 -> n3 -> n4 -> n5 -> ...
-    static SingleListNode getNodes(int[] array) {
-        SingleListNode node = new SingleListNode(array[array.length - 1], null);
-        int i = array.length - 2;
+    public static SingleListNode getNodes(int[] array) {
+        SingleListNode node = null;
+        int i = array.length - 1;
         while (i >= 0) {
             node = new SingleListNode(array[i], node);
             i --;
