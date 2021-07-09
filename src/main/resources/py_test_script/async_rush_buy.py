@@ -19,7 +19,7 @@ _date_ = '2019/3/13 18:18'
 #     requests.post(url2, json=data)
 
 
-# 并发请求接口，压力测试
+# 并发请求接口，压力测试，模拟秒杀抢购
 
 success_num = 0
 fail_num = 0

@@ -25,7 +25,7 @@ public interface GoodMapper {
 
     List<Good> getGoodList();
 
-    Good getGoodStore(@Param("goodName")String goodName);
+    Good getGoodStore(@Param("goodName") String goodName);
 
     void resetStore(@Param("store") Integer store);
 }

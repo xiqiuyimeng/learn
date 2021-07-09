@@ -20,4 +20,6 @@ public interface GoodService {
     boolean buy(String goodName);
 
     void resetStore(Integer store);
+
+    String getGoodByName(String goodName);
 }

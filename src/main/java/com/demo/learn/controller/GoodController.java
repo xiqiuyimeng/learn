@@ -1,5 +1,6 @@
 package com.demo.learn.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.demo.learn.model.Good;
 import com.demo.learn.service.GoodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,15 @@ public class GoodController {
     public String resetStore(@RequestParam("store") Integer store) {
         goodService.resetStore(store);
         return "重置成功";
+    }
+
+    @GetMapping("getGoodByName")
+    public JSONObject getGoodByName(@RequestParam("goodName")String goodName) {
+        String good = goodService.getGoodByName(goodName);
+        JSONObject result = new JSONObject();
+        boolean success = !"无".equals(good);
+        result.put("success", success);
+        result.put("data", good);
+        return result;
     }
 }

@@ -1,8 +1,10 @@
 package com.demo.learn.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.demo.learn.dao.GoodMapper;
 import com.demo.learn.model.Good;
 import com.demo.learn.service.GoodService;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 //import org.redisson.Redisson;
@@ -10,12 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 //import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 @Slf4j
@@ -28,6 +32,14 @@ public class GoodServiceImpl implements GoodService {
     private RedisTemplate<String, String> redisTemplate;
 //    @Autowired
 //    private RedissonClient redisson;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    private final static String GOOD_KEY = "good:";
+
+    private final static Integer EXPIRE_TIME = 60 * 12;
+
+    private static final ReentrantLock lock = new ReentrantLock();
 
     @Override
     public Good getGood(Integer id) {
@@ -158,4 +170,44 @@ public class GoodServiceImpl implements GoodService {
     }
 
 
+    /**
+     * 根据商品名称获取商品，商品缓存在redis中
+     * 涉及到缓存击穿问题：应控制只有一个线程查询数据库更新缓存
+     * 缓存穿透问题：数据库也查询不到的情况，应该直接置为null
+     * @param goodName
+     * @return
+     */
+    @Override
+    public String getGoodByName(String goodName) {
+        String goodKey = GOOD_KEY + goodName;
+        String goodStr = stringRedisTemplate.opsForValue().get(goodKey);
+        if (StringUtils.isBlank(goodStr)) {
+            if (lock.tryLock()) {
+                try {
+                    Good good = goodMapper.getGoodStore(goodName);
+                    if (good == null) {
+                        // 如果数据库查询不到，应该设置为空
+                        goodStr = "无";
+                    } else {
+                        // 否则，将查出的数据放入redis
+                        goodStr = JSON.toJSONString(good);
+                    }
+                    redisTemplate.opsForValue().set(goodKey, goodStr, EXPIRE_TIME, TimeUnit.MINUTES);
+                } finally {
+                    lock.unlock();
+                }
+            } else {
+                goodStr = redisTemplate.opsForValue().get(goodKey);
+                if (StringUtils.isBlank(goodStr)) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return getGoodByName(goodName);
+                }
+            }
+        }
+        return goodStr;
+    }
 }
