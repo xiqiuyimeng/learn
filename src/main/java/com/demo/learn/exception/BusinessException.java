@@ -15,6 +15,7 @@ public class BusinessException extends RuntimeException {
      * @param exceptionInter
      */
     public BusinessException(BaseExceptionInter exceptionInter) {
+        super(exceptionInter.getMessage());
         this.exceptionInter = exceptionInter;
     }
 
