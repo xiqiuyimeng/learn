@@ -1,6 +1,6 @@
 package com.demo.learn.controller;
 
-import com.demo.annotation.MyFile;
+import com.demo.learn.annotation.MyFile;
 import com.demo.learn.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

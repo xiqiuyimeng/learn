@@ -147,6 +147,7 @@
 <!--            <artifactId>redisson-spring-boot-starter</artifactId>-->
 <!--            <version>3.15.5</version>-->
 <!--        </dependency>-->
+
         <!--  shiro-core，shiro核心依赖  -->
         <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-core -->
         <dependency>
@@ -155,6 +156,18 @@
             <version>1.7.1</version>
         </dependency>
 
+        <!-- dubbo -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.dubbo</groupId>-->
+<!--            <artifactId>dubbo-spring-boot-starter</artifactId>-->
+<!--            <version>2.7.8</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; zookeeper依赖 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.dubbo</groupId>-->
+<!--            <artifactId>dubbo-metadata-report-zookeeper</artifactId>-->
+<!--            <version>2.7.8</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
