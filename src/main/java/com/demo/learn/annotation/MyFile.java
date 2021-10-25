@@ -1,4 +1,4 @@
-package com.demo.annotation;
+package com.demo.learn.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.ValueConstants;
