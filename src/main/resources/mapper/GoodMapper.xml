@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.demo.learn.dao.GoodMapper">
-    <resultMap id="BaseResultMap" type="com.demo.learn.model.Good">
+<mapper namespace="org.demo.learn.dao.GoodMapper">
+    <resultMap id="BaseResultMap" type="org.demo.learn.model.Good">
         <result column="id" property="id" jdbcType="INTEGER"/>
         <result column="good_name" property="goodName" jdbcType="VARCHAR"/>
         <result column="store" property="store" jdbcType="INTEGER"/>
@@ -25,7 +25,7 @@
         delete from good
         where id = #{id,jdbcType=INTEGER}
     </delete>
-    <insert id="insert" parameterType="com.demo.learn.model.Good" >
+    <insert id="insert" parameterType="org.demo.learn.model.Good" >
         insert into good (
         id, 
         good_name, 
@@ -41,7 +41,7 @@
         #{updateTime,jdbcType=TIMESTAMP}
         )
     </insert>
-    <insert id="insertSelective" parameterType="com.demo.learn.model.Good" >
+    <insert id="insertSelective" parameterType="org.demo.learn.model.Good" >
         insert into good
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="id != null" >
@@ -78,7 +78,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKey" parameterType="com.demo.learn.model.Good" >
+    <update id="updateByPrimaryKey" parameterType="org.demo.learn.model.Good" >
         update good
         set good_name = #{goodName,jdbcType=VARCHAR}, 
           store = #{store,jdbcType=INTEGER}, 
@@ -86,7 +86,7 @@
           update_time = #{updateTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.demo.learn.model.Good" >
+    <update id="updateByPrimaryKeySelective" parameterType="org.demo.learn.model.Good" >
         update good
         <set>
             <if test="goodName != null" >
