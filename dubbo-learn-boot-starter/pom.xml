@@ -5,16 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.demo</groupId>
-    <artifactId>test-spring-boot-starter</artifactId>
+    <artifactId>dubbo-learn-boot-starter</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>org.demo</groupId>
-            <artifactId>test-spring-boot-autoconfigure</artifactId>
+            <artifactId>dubbo-learn-boot-autoconfigure</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 
 </project>
