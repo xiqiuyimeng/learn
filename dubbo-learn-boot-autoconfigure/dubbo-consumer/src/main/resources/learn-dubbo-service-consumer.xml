@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://dubbo.apache.org/schema/dubbo
+           http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!-- 声明需要消费的服务接口，配置文件配置dubbo consumer -->
+    <dubbo:reference id="rpcTestServiceForConsumer" interface="org.demo.service.RpcTestService" version="0.0.1" check="false"/>
+
+</beans>

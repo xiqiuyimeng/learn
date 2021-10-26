@@ -130,7 +130,7 @@
         </dependency>
         <!--  自定义starter      -->
         <dependency>
-            <groupId>org.example</groupId>
+            <groupId>org.demo</groupId>
             <artifactId>test-spring-boot-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -154,6 +154,13 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
             <version>1.7.1</version>
+        </dependency>
+
+        <!-- dubbo学习模块 -->
+        <dependency>
+            <groupId>org.demo</groupId>
+            <artifactId>dubbo-learn-boot-starter</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
