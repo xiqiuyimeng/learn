@@ -1,0 +1,11 @@
+version: '1'
+services:
+  # learn容器
+  learn:
+    image: learn:latest
+    ports:
+      - "8080:8080"
+    extra_hosts:
+      - "server:49.232.199.205"
+    environment:
+      test.url: http://localhost:8080/test
