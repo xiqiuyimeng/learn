@@ -5,6 +5,7 @@ services:
     image: learn:latest
     ports:
       - "8080:8080"
+	  - "20880:20880"
     extra_hosts:
       - "server:49.232.199.205"
     environment:
