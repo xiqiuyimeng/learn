@@ -1,0 +1,36 @@
+version: '1'
+services:
+  # redis 容器
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - /data/redis-data:/data
+      - /conf/redis.conf:/etc/redis/redis.conf
+      - /log/redis:/var/log/redis
+    command: redis-server /etc/redis/redis.conf
+    container_name: redis
+
+  # es 容器
+  elasticsearch:
+    image: elasticsearch:6.8.20
+    ports:
+      - "9200:9200"
+    environment:
+      TAKE_FILE_OWNERSHIP: 1
+    volumes:
+      - /data/es-data/:/usr/share/elasticsearch/data
+      - /log/es:/usr/share/elasticsearch/logs
+    container_name: es
+
+  # zookeeper容器
+  zookeeper:
+    image: zookeeper:latest
+    ports:
+      - "2181:2181"
+    volumes:
+      - /data/zk-data:/data
+    container_name: zk
+
+
