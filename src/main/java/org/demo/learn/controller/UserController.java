@@ -50,7 +50,6 @@ public class UserController {
     }
 
     @GetMapping("hello")
-    @ResponseBody
     public String hello(@RequestParam("param1") String param1,
                         @RequestParam("param2") String param2) {
         System.out.println(param1);
