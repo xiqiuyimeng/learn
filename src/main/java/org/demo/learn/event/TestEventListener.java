@@ -20,4 +20,12 @@ public class TestEventListener {
         Thread.sleep(3000);
         log.info("接收到了: " + event.getMsg());
     }
+
+    @EventListener
+    @Async
+    public void onTestEvent2(TestEvent event) throws InterruptedException {
+        log.info("开始接收信息22222");
+        Thread.sleep(3000);
+        log.info("接收到了22222: " + event.getMsg());
+    }
 }
