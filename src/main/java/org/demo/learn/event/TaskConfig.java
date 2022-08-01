@@ -5,8 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**
  * @author luwt-a
@@ -16,6 +15,22 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class TaskConfig {
 
+    /**
+     * 服务器核数
+     */
+    private static final int PROCESSOR_SIZE = Runtime.getRuntime().availableProcessors();
+
+    private static final int CORE_POOL_SIZE = PROCESSOR_SIZE * 2;
+
+    private static final int MAX_POOL_SIZE = PROCESSOR_SIZE * 8;
+
+    private static final long KEEP_ALIVE_TIME = 10L;
+
+    private static final int QUEUE_CAPACITY = 1000;
+
+    /**
+     * 提供给 Async 注解使用的线程池
+     */
     @Bean
     public Executor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -26,5 +41,16 @@ public class TaskConfig {
         executor.setThreadNamePrefix("test thread-----");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         return executor;
+    }
+
+    /**
+     * 配置自定义线程池
+     */
+    @Bean
+    public ExecutorService executorService() {
+        return new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE,
+                KEEP_ALIVE_TIME, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(QUEUE_CAPACITY),
+                new ThreadPoolExecutor.CallerRunsPolicy());
     }
 }

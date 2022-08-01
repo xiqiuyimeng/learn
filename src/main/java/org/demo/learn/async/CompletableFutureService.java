@@ -1,0 +1,76 @@
+package org.demo.learn.async;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+
+/**
+ * 使用CompletableFuture来实现任务编排，带有async的方法为异步处理
+ * 例如下面的test方法，可以实现 AB 方法并行，同时结束后，再取出 AB 的结果，执行 C，
+ * 最终输出结果
+ * @author luwt-a
+ * @date 2022/8/1
+ */
+@Slf4j
+@Component
+public class CompletableFutureService {
+
+    @Resource
+    ExecutorService executorService;
+
+    public void test() {
+        // 异步执行
+        CompletableFuture<Object> futureA = CompletableFuture.supplyAsync(this::methodA, executorService);
+        CompletableFuture<Object> futureB = CompletableFuture.supplyAsync(this::methodB, executorService);
+        // 等待AB执行完
+        CompletableFuture<Void> completableFuture = CompletableFuture.allOf(futureA, futureB);
+        // 继续执行C
+        CompletableFuture<String> result = completableFuture.thenApply(v -> {
+            log.info((String) futureA.join());
+            log.info((String) futureB.join());
+            return methodC();
+        });
+        try {
+            log.info("输出结果：{}", result.get());
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String methodA() {
+        try {
+            Thread.sleep(3000);
+            log.info("methodA 方法执行");
+            // 此处可以抛异常
+//            int a = 1/0;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "methodA";
+    }
+
+    public String methodB() {
+        try {
+            Thread.sleep(2000);
+            log.info("methodB 方法执行");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "methodB";
+    }
+
+    public String methodC() {
+        try {
+            Thread.sleep(2000);
+            log.info("methodC 方法执行");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "methodC";
+    }
+
+}
