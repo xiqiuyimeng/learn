@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
  * apollo读取配置的类在此类之前，所以正常来说，存在需要替换的属性占位符时，都可以正常被替换到，
  * 现在apollo配置文件中配置与代码中需要替换的属性占位符不符合，我们就可以在这两个类之间加入一个自定义的 BeanFactoryPostProcessor，
  * 获取apollo的属性值，将其拆分，将新的属性添加到应用的当前环境中，添加属性时使用 {@link MapPropertySource} 应该是最合适的。
+ * 使用 MapPropertySource 的原因：所有的属性类都是继承 PropertySource，在此类子类中寻找，map应该是比较合适自定义的一个
+ * apollo使用的属性类是：CompositePropertySource
  *
  * 无论是@Value注解还是使用xml配置的形式来获取配置，都是在 PropertySourcesPlaceholderConfigurer 中处理属性占位符替换
  * 完整示例代码如下，注入这些测试元素的类为：{@link PropertySplitRunner}
