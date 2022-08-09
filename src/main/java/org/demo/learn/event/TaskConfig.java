@@ -20,9 +20,9 @@ public class TaskConfig {
      */
     private static final int PROCESSOR_SIZE = Runtime.getRuntime().availableProcessors();
 
-    private static final int CORE_POOL_SIZE = PROCESSOR_SIZE * 2;
+    private static final int CORE_POOL_SIZE = PROCESSOR_SIZE << 1;
 
-    private static final int MAX_POOL_SIZE = PROCESSOR_SIZE * 8;
+    private static final int MAX_POOL_SIZE = PROCESSOR_SIZE << 3;
 
     private static final long KEEP_ALIVE_TIME = 10L;
 
