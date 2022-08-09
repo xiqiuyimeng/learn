@@ -52,4 +52,11 @@ public class TestAsyncController {
         return "ok";
     }
 
+    @GetMapping("completableFuture2")
+    public String completableFuture2() {
+        log.info("completableFuture2 方法");
+        completableFutureService.test2();
+        return "ok";
+    }
+
 }

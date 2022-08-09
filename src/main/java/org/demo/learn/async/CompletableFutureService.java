@@ -41,6 +41,16 @@ public class CompletableFutureService {
         }
     }
 
+
+    public void test2() {
+        // 先执行A，然后拿到A的执行结果，异步执行BC
+        CompletableFuture<String> futureA = CompletableFuture.supplyAsync(this::methodA, executorService);
+        futureA.thenAccept(resA -> {
+            CompletableFuture.supplyAsync(() -> methodD(resA), executorService);
+            CompletableFuture.supplyAsync(() -> methodE(resA), executorService);
+        });
+    }
+
     public String methodA() {
         try {
             Thread.sleep(3000);
@@ -71,6 +81,27 @@ public class CompletableFutureService {
             throw new RuntimeException(e);
         }
         return "methodC";
+    }
+
+
+    public String methodD(String s) {
+        try {
+            Thread.sleep(2000);
+            log.info("methodD 方法执行" + s);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "methodD";
+    }
+
+    public String methodE(String s) {
+        try {
+            Thread.sleep(2000);
+            log.info("methodE 方法执行" + s);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "methodE";
     }
 
 }
