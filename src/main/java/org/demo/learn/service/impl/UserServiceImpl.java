@@ -1,13 +1,14 @@
 package org.demo.learn.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.demo.learn.dao.UserMapper;
 import org.demo.learn.model.User;
 import org.demo.learn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Slf4j
@@ -39,8 +40,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUserList() {
-        return userMapper.getUserList();
+    public PageInfo<User> getUserList(Integer pageNum, Integer pageSize) {
+        Page<User> page = PageHelper.startPage(pageNum, pageSize).doSelectPage(() -> userMapper.getUserList());
+        return new PageInfo<>(page);
     }
 
 }

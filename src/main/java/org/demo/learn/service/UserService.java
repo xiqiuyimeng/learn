@@ -1,8 +1,7 @@
 package org.demo.learn.service;
 
+import com.github.pagehelper.PageInfo;
 import org.demo.learn.model.User;
-
-import java.util.List;
 
 
 public interface UserService {
@@ -15,6 +14,6 @@ public interface UserService {
 
     void editUser(User record);
 
-    List<User> getUserList();
+    PageInfo<User> getUserList(Integer pageNum, Integer pageSize);
 
 }

@@ -1,9 +1,8 @@
 package org.demo.learn.dao;
 
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.demo.learn.model.User;
-
-import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -20,5 +19,5 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User user);
 
-    List<User> getUserList();
+    Page<User> getUserList();
 }

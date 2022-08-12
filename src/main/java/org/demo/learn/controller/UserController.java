@@ -1,13 +1,11 @@
 package org.demo.learn.controller;
 
+import com.github.pagehelper.PageInfo;
 import org.demo.learn.model.User;
 import org.demo.learn.service.UserService;
-//import org.demo.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -45,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping("list")
-    public List<User> getList(){
-        return userService.getUserList();
+    public PageInfo<User> getList(@RequestParam Integer pageNum, @RequestParam Integer pageSize){
+        return userService.getUserList(pageNum, pageSize);
     }
 
 //    @GetMapping("hello")
