@@ -94,5 +94,10 @@
         select
         <include refid="Base_Column_List"/>
         from user
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(name)">
+                name = #{name,jdbcType=VARCHAR}
+            </if>
+        </where>
     </select>
 </mapper>

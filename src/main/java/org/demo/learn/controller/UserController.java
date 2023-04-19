@@ -43,8 +43,10 @@ public class UserController {
     }
 
     @GetMapping("list")
-    public PageInfo<User> getList(@RequestParam Integer pageNum, @RequestParam Integer pageSize){
-        return userService.getUserList(pageNum, pageSize);
+    public PageInfo<User> getList(@RequestParam Integer pageNum,
+                                  @RequestParam Integer pageSize,
+                                  @RequestParam String name){
+        return userService.getUserList(pageNum, pageSize, name);
     }
 
 //    @GetMapping("hello")

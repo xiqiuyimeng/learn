@@ -14,6 +14,6 @@ public interface UserService {
 
     void editUser(User record);
 
-    PageInfo<User> getUserList(Integer pageNum, Integer pageSize);
+    PageInfo<User> getUserList(Integer pageNum, Integer pageSize, String name);
 
 }
