@@ -14,6 +14,7 @@ import java.util.List;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
+ * word动态表格的处理办法：先将word文档，另存为xml文件，在xml文件中填写freemarker语法，然后重命名为 ftl格式模板文件，使用freemarker渲染即可
  * @author luwt-a
  * @date 2023/8/31
  */
