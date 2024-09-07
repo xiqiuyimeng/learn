@@ -5,6 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 一般需要一个能静态、随时随地获取spring bean的工具类，可以用于一些特殊场景，
  * 例如：在使用一些注解时，比如@Async，这些注解的实现机制都是动态代理，那么使其生效，则必须使用动态代理过的类来调用此方法
@@ -52,5 +55,9 @@ public class SpringUtils implements ApplicationContextAware {
 
     public static <T> T getBean(Class<T> tClass) {
         return applicationContext.getBean(tClass);
+    }
+
+    public static <T> List<T> getBeans(Class<T> tClass) {
+        return new ArrayList<>(applicationContext.getBeansOfType(tClass).values());
     }
 }

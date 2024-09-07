@@ -1,11 +1,14 @@
 package org.demo.learn.controller;
 
 import com.github.pagehelper.PageInfo;
+import org.demo.learn.designPattern.strategy.StrategyUser;
 import org.demo.learn.model.User;
 import org.demo.learn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -15,6 +18,9 @@ public class UserController {
 //
 //    @Autowired
 //    TestService testService;
+
+    @Autowired
+    StrategyUser strategyUser;
 
     @Autowired
     UserService userService;
@@ -56,5 +62,16 @@ public class UserController {
 //        System.out.println(param2);
 //        return testService.testMethod();
 //    }
+
+    @GetMapping("strategy")
+    public List<?> strategy(@RequestParam Integer num) {
+        if (num == 1) {
+            return strategyUser.handleStrategyFirst();
+        } else if (num == 2) {
+            return strategyUser.handleStrategySecond();
+        } else {
+            return strategyUser.handleStrategyAll();
+        }
+    }
 
 }
