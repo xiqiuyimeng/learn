@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -27,7 +29,12 @@ public class CompletableFutureService {
         CompletableFuture<Object> futureA = CompletableFuture.supplyAsync(this::methodA, executorService);
         CompletableFuture<Object> futureB = CompletableFuture.supplyAsync(this::methodB, executorService);
         // 等待AB执行完
-        CompletableFuture<Void> completableFuture = CompletableFuture.allOf(futureA, futureB);
+//        CompletableFuture<Void> completableFuture = CompletableFuture.allOf(futureA, futureB);
+        // 除了可变参数直接传递，也可以放入list
+        List<CompletableFuture<?>> futures = new ArrayList<>();
+        futures.add(futureA);
+        futures.add(futureB);
+        CompletableFuture<Void> completableFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
         // 继续执行C
         CompletableFuture<String> result = completableFuture.thenApply(v -> {
             log.info((String) futureA.join());
