@@ -19,7 +19,7 @@ import java.util.List;
 public class StrategyUser {
 
     @Autowired
-    private Composite<StrategyResultDTO> composite;
+    private Composite<StrategyParamDTO, StrategyResultDTO> composite;
 
     /**
      * 策略1 调用

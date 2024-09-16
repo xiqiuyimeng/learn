@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
  * @date 2024/9/7
  */
 @Component
-public class Composite<R> implements CommandLineRunner {
+public class Composite<T, R> implements CommandLineRunner {
 
     private List<StrategyService> strategyServices = new ArrayList<>();
 
-    private final Map<StrategyEnum, StrategyService<R>> strategyServiceMap = new HashMap<>();
+    private final Map<StrategyEnum, StrategyService<T, R>> strategyServiceMap = new HashMap<>();
 
-    public <T> List<R> strategyHandle(StrategyContext<T> context) {
+    public List<R> strategyHandle(StrategyContext<T> context) {
         // 获取处理器
-        List<StrategyService<R>> strategyServices = getStrategyServices(context.getStrategies());
+        List<StrategyService<T, R>> strategyServices = getStrategyServices(context.getStrategies());
         // 调用处理器处理数据
         // 返回结果
         return strategyServices.stream()
@@ -33,10 +33,10 @@ public class Composite<R> implements CommandLineRunner {
                 .collect(Collectors.toList());
     }
 
-    private List<StrategyService<R>> getStrategyServices(List<StrategyEnum> strategies) {
-        List<StrategyService<R>> services = new ArrayList<>();
+    private List<StrategyService<T, R>> getStrategyServices(List<StrategyEnum> strategies) {
+        List<StrategyService<T, R>> services = new ArrayList<>();
         for (StrategyEnum strategy : strategies) {
-            StrategyService<R> strategyService = strategyServiceMap.get(strategy);
+            StrategyService<T, R> strategyService = strategyServiceMap.get(strategy);
             if (Objects.isNull(strategyService)) {
                 // 获取service
                 Optional<StrategyService> serviceOptional = strategyServices.stream()

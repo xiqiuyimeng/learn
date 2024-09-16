@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @date 2024/9/7
  */
 @Component
-public class StrategySecondHandler extends AbstractStrategyHandler<StrategyResultDTO>{
+public class StrategySecondHandler extends AbstractStrategyHandler<StrategyParamDTO, StrategyResultDTO>{
 
     @Override
     protected StrategyEnum getSupportStrategy() {
@@ -21,12 +21,12 @@ public class StrategySecondHandler extends AbstractStrategyHandler<StrategyResul
     }
 
     @Override
-    protected <T> List<StrategyResultDTO> doHandle(List<T> data) {
+    protected List<StrategyResultDTO> doHandle(List<StrategyParamDTO> data) {
         // 第二个策略具体实现
         return data.stream().map(item -> {
             StrategyResultDTO result = new StrategyResultDTO();
             result.setName(getSupportStrategy().toString());
-            result.setResult(((StrategyParamDTO)item).getParamName());
+            result.setResult(item.getParamName());
             return result;
         }).collect(Collectors.toList());
     }
