@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RateLimiterUtil {
 
     // 创建一个每秒限制 2 个的限流器
-    private final RateLimiter rateLimiter = RateLimiter.create(2);
+    private final RateLimiter rateLimiter = RateLimiter.create(2.0);
 
     public void callExternalApi() {
         // 调用之前，获取许可
